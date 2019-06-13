@@ -1,0 +1,44 @@
+Data Engineering Challenge
+
+The assignment is divided into two parts:
+
+The first part consists of a coding assignment and should be delivered via a repository (could be public or private) that contains all code and documentation so that the project can be evaluated and all steps be reproduced properly. Think of what a high quality software project is required to have and deliver the code based on your personal quality standards. Also take into consideration that the code needs to be scalable for even larger data sets.
+
+The second part consists of written questions. Use any necessary visual aids, diagrams, code snippets whenever it would help explain a concept in a clearer fashion.
+
+- Coding assignment:
+
+You are provided a dataset that contains information regarding items sold via a website. There are two files that compose the dataset, a ‘fact’ table fact.csv.gz and a ‘dimension’ table dim.csv.gz. The dataset correspond to timeseries events. Timeseries events are ocurrences that happened at a certain time (order_date), are described by properties captured in dimensions, and it has measurable properties that can be aggregated called metrics. The fields that correspond to the dataset timestamp its dimensions and its metrics are described in the json below:
+
+{
+"timestamp" : ["order_date"],
+"dimension" : ["id", "currency", "device", "product",
+       "channel", "store", "company", "is_banner", "is_tax", "is_market_place", "material_status",
+       "current_price_range", "cmc_division", "cmc_business_unit", "gender"],
+"metric" : [ "gross total volume",
+       "product net cost", "product net revenue", "gross merchandise volume",
+       "item sold", "pageviews"]
+}
+Process the dataset taking into account the following considerations.
+
+Taking into account the list of dimensions and metrics and the fact that the product field is the key that denotes corresponding tuples in the two tables, construct a flat dataset composed of timeseries events.
+
+The following calculated metrics need to be included in the final dataset:
+average cost per item
+absolute margin
+percentage margin
+average price per item
+variation in averge price per item (% vs. last day)
+The gender field has too many overlapping values, this needs to be reduced to field with at most 5 different values (use your own criteria to deduce this)
+
+All dates need to be formatted to combined date and time ISO_8601 in UTC (assume all date and time fields in the dataset are stored as UTC)
+
+Using the product and the order_date fields as a key denoting event uniqueness, reduce the granularity by ignoring all other dimensions not linked to the product dimension table so that there are less lines to ingest in the final output.
+
+Convert the final output into JSONs (i.e.: format acceptable by an elasticsearch server).
+
+- Extra Questions
+
+Plot the distribution of the product dimension over the order_date for the fact table. What kind of problems could you run into whenever parallelizing processing using spark or hadoop using this field as a key? How can you resolve such issues?
+
+How would you optimize the elasticsearch index taking into account that it will not be used for full text search, only for timeseries events queries? (mainly aggregations and field value retrieval)
